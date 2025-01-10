@@ -47,6 +47,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 # If there is no project opened, this script will create a
 # project, but make sure you do not have an existing project
 # <./myproj/project_1.xpr> in the current working folder.
+open_project ./project/project_1.xpr
 
 set list_projs [get_projects -quiet]
 if { $list_projs eq "" } {
@@ -159,10 +160,6 @@ xilinx.com:ip:xdma:4.1\
    }
 
 }
-
-add_files sources/AXI_Write.v
-add_files sources/data_pack.v
-add_files sources/interrupt_gen.v
 
 ##################################################################
 # CHECK Modules

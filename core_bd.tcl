@@ -154,9 +154,6 @@ xilinx.com:ip:xlconstant:1.1\
 
 }
 
-add_files sources/difftest.v
-add_files sources/Nutshell_fpga.v
-
 ##################################################################
 # CHECK Modules
 ##################################################################

@@ -2,7 +2,7 @@
 
 !.gitignore
 !*.tcl
-!sources/**/*.v
-!sources/**/*.sv
-!sources/**/*.vh
+!*.v
+!*.vh
+!xdc/*
 !*.sh
