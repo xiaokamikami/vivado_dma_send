@@ -1,0 +1,8 @@
+*
+
+!.gitignore
+!*.tcl
+!sources/**/*.v
+!sources/**/*.sv
+!sources/**/*.vh
+!*.sh
