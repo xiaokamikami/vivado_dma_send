@@ -7,8 +7,6 @@ module data_pack(
     input data_next,
     input en,
     input [4063:0] out_io_data,
-    input   out_step,
-    input   out_dut_zeon,
     output   [4071:0] data,
     output   [799:0] outdata1,
     output   [799:0] outdata2,
@@ -28,30 +26,40 @@ module data_pack(
     assign outdata1=out_io_data[799:0];
     assign outdata2=reg_data[3999:3200];
     assign Hbreak=(isbreak+out_enable)==2?1:0;
-    wire [7:0] step_uint8 = {7'b0, out_step};
-    wire [7:0] zeon_uint8 = {7'b0, out_dut_zeon};
-      always @(posedge m_axis_c2h_aclk or negedge m_axis_c2h_aresetn  ) begin
-            if(! m_axis_c2h_aresetn || en) begin
-             isbreak<=1;
-             data_num<=0;
-             reg_data<=0;
-             isnext<=1;
-             reg_data_valid<=0;
-            end else begin
+
+    reg last_enable;
+  
+    always @(posedge m_axis_c2h_aclk or negedge m_axis_c2h_aresetn  ) begin
+      if(!m_axis_c2h_aresetn) begin
+        isbreak<=1;
+        reg_data<=0;
+        isnext<=1;
+        reg_data_valid<=0;
+        last_enable <= 0;
+      end else if(en) begin
+        data_num<= 0;
+        isbreak<=1;
+        reg_data<=0;
+        isnext<=1;
+        reg_data_valid<=0;
+        last_enable <= 0;
+      end else begin
             if(isnext) begin
-               if( out_enable) begin
+               if(!last_enable &&  out_enable) begin
                  reg_data_valid<=1;
                  reg_data<={out_io_data, data_num};
                  isnext<=0;
                 end
+                last_enable <= out_enable;
                 isbreak<=1;
             end else if(data_next) begin
                 isbreak<=0;
                 data_num<=data_num+1;
                 isnext<=1;
+                last_enable <= 0;
             end else  begin
               reg_data_valid<=0;
-             isbreak<=1;
+              isbreak<=1;
             end
       end
   end

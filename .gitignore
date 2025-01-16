@@ -5,4 +5,5 @@
 !*.v
 !*.vh
 !xdc/*
+!sources/*
 !*.sh

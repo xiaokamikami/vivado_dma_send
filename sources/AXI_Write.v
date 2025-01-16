@@ -54,6 +54,7 @@ module AXI_Write(
                 if(data_valid) begin
                     mix_data<=data;
                     state<=1;
+                    datalen = 0;
                 end else begin
                     state<=0;
                     datalen <= 0;
