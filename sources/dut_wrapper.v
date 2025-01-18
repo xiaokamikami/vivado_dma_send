@@ -13,13 +13,11 @@ module dut_wrapper(
     `axi_master_if(AXI_MMIO, 32),
     input reset_en,
     //dut out
-    output out_step,
-    output out_dut_zeon,
     output  out_enable,
     output  [4063:0] out_io_data
     );
     
-    dut_core_bd dut_core_bd(
+    core_bd core_bd(
     .xdma_clk(xdma_clk),
     .xdma_resetn(xdma_resetn),
     .encore_clk(encore_clk),
@@ -31,8 +29,6 @@ module dut_wrapper(
     `axi_connect_if(AXI_MEM, AXI_MEM),
     `axi_connect_if(AXI_MMIO, AXI_MMIO),
     .out_enable(out_enable),
-    .dut_zeon_0(out_dut_zeon),
-    .out_step_0(out_step),
     .out_io_data_0(out_io_data)
 );
 endmodule

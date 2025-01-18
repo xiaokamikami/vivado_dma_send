@@ -1,6 +1,6 @@
 
 ################################################################
-# This is a generated script based on design: rocket_bd
+# This is a generated script based on design: core_bd
 #
 # Though there are limitations about the generated script,
 # the main purpose of this utility is to make learning
@@ -35,7 +35,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source rocket_bd_script.tcl
+# source core_bd_script.tcl
 
 
 # The design that will be created by this Tcl script contains the following 
@@ -57,7 +57,7 @@ if { $list_projs eq "" } {
 
 # CHANGE DESIGN NAME HERE
 variable design_name
-set design_name dut_core_bd
+set design_name core_bd
 
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:
@@ -312,7 +312,6 @@ proc create_root_design { parentCell } {
 
 
   # Create ports
-  set dut_zeon_0 [ create_bd_port -dir O dut_zeon_0 ]
   set encore_clk [ create_bd_port -dir I -type clk -freq_hz 100000000 encore_clk ]
   set encore_task_clk [ create_bd_port -dir I -type clk -freq_hz 50000000 encore_task_clk ]
   set_property -dict [ list \
@@ -324,7 +323,6 @@ proc create_root_design { parentCell } {
  ] $ila_clk
   set out_enable [ create_bd_port -dir O out_enable ]
   set out_io_data_0 [ create_bd_port -dir O -from 4063 -to 0 out_io_data_0 ]
-  set out_step_0 [ create_bd_port -dir O out_step_0 ]
   set reset_en [ create_bd_port -dir O -from 0 -to 0 reset_en ]
   set xdma_clk [ create_bd_port -dir I -type clk -freq_hz 250000000 xdma_clk ]
   set xdma_resetn [ create_bd_port -dir I -type rst xdma_resetn ]
@@ -414,10 +412,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net Nutshell_fpga_0_nutcore_backend_isu_difftest_packed_bore [get_bd_pins Nutshell_fpga_0/nutcore_backend_isu_difftest_packed__bore] [get_bd_pins difftest_0/in_0]
   connect_bd_net -net Nutshell_fpga_0_nutcore_backend_wbu_difftest_commit_packed_bore [get_bd_pins Nutshell_fpga_0/nutcore_backend_wbu_difftest_commit_packed__bore] [get_bd_pins difftest_0/in_4]
   connect_bd_net -net Nutshell_fpga_0_nutcore_backend_wbu_difftest_wb_packed_bore [get_bd_pins Nutshell_fpga_0/nutcore_backend_wbu_difftest_wb_packed__bore] [get_bd_pins difftest_0/in_5]
-  connect_bd_net -net difftest_0_dut_zeon [get_bd_ports dut_zeon_0] [get_bd_pins difftest_0/dut_zeon]
   connect_bd_net -net difftest_0_out_enable [get_bd_ports out_enable] [get_bd_pins difftest_0/out_enable]
   connect_bd_net -net difftest_0_out_io_data [get_bd_ports out_io_data_0] [get_bd_pins difftest_0/out_io_data]
-  connect_bd_net -net difftest_0_out_step [get_bd_ports out_step_0] [get_bd_pins difftest_0/out_step]
   connect_bd_net -net encore_task_clk_1 [get_bd_ports encore_task_clk] [get_bd_pins Nutshell_fpga_0/clock] [get_bd_pins axi_interconnect_1/S00_ACLK] [get_bd_pins axi_interconnect_2/S00_ACLK] [get_bd_pins axi_interconnect_4/M00_ACLK] [get_bd_pins difftest_0/clock] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
   connect_bd_net -net ila_clk_1 [get_bd_ports ila_clk] [get_bd_pins vio_0/clk]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins axi_interconnect_1/S00_ARESETN] [get_bd_pins axi_interconnect_2/S00_ARESETN] [get_bd_pins axi_interconnect_4/M00_ARESETN] [get_bd_pins util_vector_logic_0/Res]

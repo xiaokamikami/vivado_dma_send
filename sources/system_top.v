@@ -59,7 +59,8 @@ module system_top #(
     pcie_ep_gt_ref_clk_clk_n,
     pcie_ep_gt_ref_clk_clk_p,
     pcie_ep_lnk_up,
-    pcie_ep_perstn);
+    pcie_ep_perstn
+    );
 output c0_ddr4_act_n;
 output [16:0]c0_ddr4_adr;
 output [1:0]c0_ddr4_ba;
@@ -115,12 +116,8 @@ wire ila_clk;
 wire if_delayed;
 wire [17:0] io_covSum_0;
 
-  wire out_enable;
-  wire  [4063:0] out_io_data;
-  wire    out_step;
-  wire    out_dut_zeon;
-
-
+ wire out_enable;
+ wire [4063:0] out_io_data;
 
 pcie4_send pcie4_send (
     `axi_connect_if_noid(AXI_DMA, AXI_DMA),
@@ -163,10 +160,7 @@ pcie4_send pcie4_send (
     .encore_task_clk(encore_task_clk),
     .ila_clk(ila_clk),
     .out_io_data(out_io_data),
-    .out_enable(out_enable),
-    .out_dut_zeon(out_dut_zeon),
-    .out_step(out_step)
-    
+    .out_enable(out_enable)
     );
 
 dut_wrapper dut_wrapper(
@@ -181,9 +175,7 @@ dut_wrapper dut_wrapper(
     `axi_connect_if(AXI_MEM, AXI_MEM),
     `axi_connect_if(AXI_MMIO, AXI_MMIO),
     .out_enable(out_enable),
-    .out_io_data(out_io_data),
-    .out_dut_zeon(out_dut_zeon),
-    .out_step(out_step)
+    .out_io_data(out_io_data)
 
 );
 
