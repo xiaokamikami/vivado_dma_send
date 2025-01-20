@@ -34,6 +34,7 @@ add_files sources/AXI_Write.v
 add_files sources/data_pack.v
 add_files sources/interrupt_gen.v
 add_files sources/system_top.v
+add_files source/ClockGate.v
 
 set_property top system_top [current_fileset]
 

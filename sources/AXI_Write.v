@@ -90,7 +90,6 @@ module AXI_Write(
            3: begin
               //data_num<=data_num+1'b1;
               reg_m_axis_c2h_tvalid<=0;
-              reg_data_next<=0;
               reg_m_axis_c2h_tlast<=0;
               state<=0;
            end
