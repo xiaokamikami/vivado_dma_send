@@ -56,7 +56,6 @@ module data_pack(
                 isbreak<=0;
                 data_num<=data_num+1;
                 isnext<=1;
-                last_enable <= 0;
             end else  begin
               reg_data_valid<=0;
               isbreak<=1;

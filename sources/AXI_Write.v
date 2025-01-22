@@ -6,28 +6,24 @@ module AXI_Write(
   
   input  en,
 
-   output  [511:0]         m_axis_c2h_tdata,
-   output  [63:0]              m_axis_c2h_tkeep,
-    output                      m_axis_c2h_tlast,
-    input                       m_axis_c2h_tready,
-    output                      m_axis_c2h_tvalid,
-
+  output  [511:0]         m_axis_c2h_tdata,
+  output  [63:0]              m_axis_c2h_tkeep,
+  output                      m_axis_c2h_tlast,
+  input                       m_axis_c2h_tready,
+  output                      m_axis_c2h_tvalid,
 
   input data_valid,
-  output  data_next,
-  output   [4:0]   sstate,
-  //output  [7:0] data_num_wire,
-  output[5:0] datalen_wire,
-  input    [4071:0] data
- // output  reg[0:0]     turn2run
-
-    );
+  output data_next,
+  output [4:0]   sstate,
+  output [5:0] datalen_wire,
+  input  [4071:0] data
+);
 
     reg [4071:0] mix_data;
-    reg [5:0] datalen;
-    reg [5:0] packge_datalen;
+    (* mark_debug = "true" *)reg [5:0] packge_count;
+    (* mark_debug = "true" *)reg [5:0] packge_datalen;
     reg [4:0] state;
-    reg [511:0]  reg_m_axis_c2h_tdata;
+    reg [511:0] reg_m_axis_c2h_tdata;
  //   reg [63:0]    reg_m_axis_c2h_tkeep_0;
     reg                  reg_m_axis_c2h_tvalid;
     reg                  reg_m_axis_c2h_tlast;
@@ -35,7 +31,7 @@ module AXI_Write(
 
     //DEBUG
     assign sstate =state;
-    assign datalen_wire= datalen;
+    assign datalen_wire= packge_datalen;
     ////////////
     assign data_next=reg_data_next;
     assign m_axis_c2h_tdata=reg_m_axis_c2h_tdata;
@@ -54,7 +50,7 @@ module AXI_Write(
                 if(data_valid) begin
                     mix_data<=data;
                     state<=1;
-                    datalen <= 0;
+                    packge_count <= 0;
                     packge_datalen <= 0;
                 end else begin
                     state<=0;
@@ -67,26 +63,26 @@ module AXI_Write(
                 state<=2;     
            end 
            2:begin
-            if(m_axis_c2h_tready&&reg_m_axis_c2h_tvalid) begin
+            if(m_axis_c2h_tready && reg_m_axis_c2h_tvalid) begin
                     reg_m_axis_c2h_tdata<=mix_data[511:0];
                     mix_data<=mix_data>>512;
-                    if( datalen=='b101111) begin
+                    if( packge_count =='d3 && packge_datalen == 'b10011) begin
                         reg_m_axis_c2h_tlast<=1;
                         state<=2;
-                    end else if(datalen == 'b101111) begin //last xmda packge
+                    end else if(packge_count =='d3 && packge_datalen == 'b10100) begin //last xmda packge
                         state<=4;
                         reg_m_axis_c2h_tlast<=0;
                         reg_data_next<=1;
                         reg_m_axis_c2h_tvalid<=0;                    
                     end
-                    else if(packge_datalen =='b10011) begin // once packge 
+                    else if(packge_count !='d3 && packge_datalen =='b10100) begin // once packge 
                         state<=3;
                         reg_data_next<=1;
                         reg_m_axis_c2h_tvalid<=0;
+                        packge_count <= packge_count + 1'b1;
                     end else begin
                         state<=2;
                     end
-                    datalen<=datalen+1'b1;
                     packge_datalen <= packge_datalen + 1'b1;
                 end
             else begin
@@ -100,6 +96,7 @@ module AXI_Write(
                     mix_data <= data >> 512;
                     state <= 2;
                     packge_datalen <= 0;
+                    reg_data_next <= 0;
                 end else begin
                     state<=3;
                 end
