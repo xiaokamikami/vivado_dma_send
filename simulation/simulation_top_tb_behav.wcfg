@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="simulation_top_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="axi_bram_ctrl_funcs" />
+            <top_module name="axi_dma_pkg" />
+            <top_module name="glbl" />
+            <top_module name="lib_pkg" />
+            <top_module name="simulation_top_tb" />
+            <top_module name="vcomponents" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="11615000fs"></ZoomStartTime>
+      <ZoomEndTime time="12535001fs"></ZoomEndTime>
+      <Cursor1Time time="11938000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="104"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="13" />
+   <wvobject type="logic" fp_name="/simulation_top_tb/reset_en">
+      <obj_property name="ElementShortName">reset_en</obj_property>
+      <obj_property name="ObjectShortName">reset_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/io_enable">
+      <obj_property name="ElementShortName">io_enable</obj_property>
+      <obj_property name="ObjectShortName">io_enable</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/core_clk">
+      <obj_property name="ElementShortName">core_clk</obj_property>
+      <obj_property name="ObjectShortName">core_clk</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/test_count">
+      <obj_property name="ElementShortName">test_count[15:0]</obj_property>
+      <obj_property name="ObjectShortName">test_count[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/test_piple">
+      <obj_property name="ElementShortName">test_piple[2:0]</obj_property>
+      <obj_property name="ObjectShortName">test_piple[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/reg_m_axis_c2h_tlast">
+      <obj_property name="ElementShortName">reg_m_axis_c2h_tlast</obj_property>
+      <obj_property name="ObjectShortName">reg_m_axis_c2h_tlast</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/reg_m_axis_c2h_tvalid">
+      <obj_property name="ElementShortName">reg_m_axis_c2h_tvalid</obj_property>
+      <obj_property name="ObjectShortName">reg_m_axis_c2h_tvalid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/packge_datalen">
+      <obj_property name="ElementShortName">packge_datalen[5:0]</obj_property>
+      <obj_property name="ObjectShortName">packge_datalen[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/packge_count">
+      <obj_property name="ElementShortName">packge_count[5:0]</obj_property>
+      <obj_property name="ObjectShortName">packge_count[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/sstate">
+      <obj_property name="ElementShortName">sstate[4:0]</obj_property>
+      <obj_property name="ObjectShortName">sstate[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/data_next">
+      <obj_property name="ElementShortName">data_next</obj_property>
+      <obj_property name="ObjectShortName">data_next</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/data_pack_0/data_valid">
+      <obj_property name="ElementShortName">data_valid</obj_property>
+      <obj_property name="ObjectShortName">data_valid</obj_property>
+   </wvobject>
+</wave_config>
