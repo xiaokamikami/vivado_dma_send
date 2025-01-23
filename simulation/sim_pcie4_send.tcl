@@ -137,6 +137,7 @@ xilinx.com:ip:smartconnect:1.0\
 xilinx.com:ip:axis_data_fifo:2.0\
 xilinx.com:ip:blk_mem_gen:8.4\
 xilinx.com:ip:sim_clk_gen:1.0\
+xilinx.com:ip:util_vector_logic:2.0\
 "
 
    set list_ips_missing ""
@@ -318,8 +319,24 @@ proc create_root_design { parentCell } {
   # Create instance: sim_clk_gen_0, and set properties
   set sim_clk_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:sim_clk_gen:1.0 sim_clk_gen_0 ]
   set_property -dict [ list \
-   CONFIG.FREQ_HZ {50000000} \
+   CONFIG.FREQ_HZ {250000000} \
  ] $sim_clk_gen_0
+
+  # Create instance: sim_clk_gen_1, and set properties
+  set sim_clk_gen_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:sim_clk_gen:1.0 sim_clk_gen_1 ]
+  set_property -dict [ list \
+   CONFIG.FREQ_HZ {50000000} \
+   CONFIG.INITIAL_RESET_CLOCK_CYCLES {10} \
+   CONFIG.RESET_POLARITY {ACTIVE_LOW} \
+ ] $sim_clk_gen_1
+
+  # Create instance: util_vector_logic_0, and set properties
+  set util_vector_logic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0 ]
+  set_property -dict [ list \
+   CONFIG.C_OPERATION {not} \
+   CONFIG.C_SIZE {1} \
+   CONFIG.LOGO_FILE {data/sym_notgate.png} \
+ ] $util_vector_logic_0
 
   # Create interface connections
   connect_bd_intf_net -intf_net AXI_Write_0_m_axis_c2h [get_bd_intf_pins AXI_Write_0/m_axis_c2h] [get_bd_intf_pins axis_data_fifo_0/S_AXIS]
@@ -331,14 +348,15 @@ proc create_root_design { parentCell } {
   # Create port connections
   connect_bd_net -net AXI_Write_0_break [get_bd_pins data_pack_0/Hbreak] [get_bd_pins interrupt_gen_0/full_break]
   connect_bd_net -net AXI_Write_0_data_next [get_bd_pins AXI_Write_0/data_next] [get_bd_pins data_pack_0/data_next]
-  connect_bd_net -net axi_gpio_1_gpio_io_o [get_bd_ports reset_en] [get_bd_pins AXI_Write_0/en] [get_bd_pins data_pack_0/en] [get_bd_pins interrupt_gen_0/en]
+  connect_bd_net -net axi_gpio_1_gpio_io_o [get_bd_ports reset_en] [get_bd_pins AXI_Write_0/en] [get_bd_pins data_pack_0/en] [get_bd_pins interrupt_gen_0/en] [get_bd_pins util_vector_logic_0/Op1]
   connect_bd_net -net data_pack_0_data [get_bd_pins AXI_Write_0/data] [get_bd_pins data_pack_0/data]
   connect_bd_net -net data_pack_0_data_valid [get_bd_pins AXI_Write_0/data_valid] [get_bd_pins data_pack_0/data_valid]
   connect_bd_net -net interrupt_gen_0_nutshell_clk [get_bd_ports core_task_clk] [get_bd_pins interrupt_gen_0/nutshell_clk]
-  connect_bd_net -net m_axis_c2h_aclk_0_1 [get_bd_pins AXI_Write_0/m_axis_c2h_aclk] [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_dma/m_axi_s2mm_aclk] [get_bd_pins axi_dma/s_axi_lite_aclk] [get_bd_pins axi_smc/aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins data_pack_0/m_axis_c2h_aclk] [get_bd_pins interrupt_gen_0/sys_clk] [get_bd_pins sim_clk_gen_0/clk]
+  connect_bd_net -net m_axis_c2h_aclk_0_1 [get_bd_pins AXI_Write_0/m_axis_c2h_aclk] [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_dma/m_axi_s2mm_aclk] [get_bd_pins axi_dma/s_axi_lite_aclk] [get_bd_pins axi_smc/aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins sim_clk_gen_0/clk]
   connect_bd_net -net out_enable_1 [get_bd_ports out_enable] [get_bd_pins data_pack_0/out_enable]
   connect_bd_net -net out_io_data_0_1 [get_bd_ports out_io_data] [get_bd_pins data_pack_0/out_io_data]
-  connect_bd_net -net rst_clk_wiz_100M_peripheral_aresetn [get_bd_pins AXI_Write_0/m_axis_c2h_aresetn] [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axi_dma/axi_resetn] [get_bd_pins axi_smc/aresetn] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins data_pack_0/m_axis_c2h_aresetn] [get_bd_pins sim_clk_gen_0/sync_rst]
+  connect_bd_net -net sim_clk_gen_1_clk [get_bd_pins AXI_Write_0/core_clk] [get_bd_pins data_pack_0/m_axis_c2h_aclk] [get_bd_pins interrupt_gen_0/sys_clk] [get_bd_pins sim_clk_gen_1/clk]
+  connect_bd_net -net util_vector_logic_0_Res [get_bd_pins AXI_Write_0/m_axis_c2h_aresetn] [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axi_dma/axi_resetn] [get_bd_pins axi_smc/aresetn] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins data_pack_0/m_axis_c2h_aresetn] [get_bd_pins util_vector_logic_0/Res]
 
   # Create address segments
   assign_bd_address -offset 0xC0000000 -range 0x00002000 -target_address_space [get_bd_addr_spaces axi_dma/Data_S2MM] [get_bd_addr_segs axi_bram_ctrl_0/S_AXI/Mem0] -force
@@ -347,6 +365,7 @@ proc create_root_design { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
+  validate_bd_design
   save_bd_design
 }
 # End of create_root_design()
@@ -358,6 +377,4 @@ proc create_root_design { parentCell } {
 
 create_root_design ""
 
-
-common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
 
