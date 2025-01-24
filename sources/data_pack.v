@@ -30,14 +30,7 @@ module data_pack(
     reg last_enable;
   
     always @(posedge m_axis_c2h_aclk or negedge m_axis_c2h_aresetn  ) begin
-      if(!m_axis_c2h_aresetn) begin
-        isbreak<=1;
-        reg_data<=0;
-        isnext<=1;
-        reg_data_valid<=0;
-        last_enable <= 0;
-      end else if(en) begin
-        data_num<= 0;
+      if(!m_axis_c2h_aresetn || en) begin
         isbreak<=1;
         reg_data<=0;
         isnext<=1;
