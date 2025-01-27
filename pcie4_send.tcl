@@ -40,7 +40,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# AXI_Write, data_pack, interrupt_gen
+# AXI_Write, interrupt_gen
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -166,7 +166,6 @@ set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
 AXI_Write\
-data_pack\
 interrupt_gen\
 "
 
@@ -364,6 +363,10 @@ proc create_root_design { parentCell } {
      return 1
    }
   
+  set_property -dict [ list \
+   CONFIG.FREQ_HZ {200000000} \
+ ] [get_bd_pins /AXI_Write_0/m_axis_c2h_aclk]
+
   # Create instance: axi_interconnect_0, and set properties
   set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0 ]
   set_property -dict [ list \
@@ -407,6 +410,7 @@ proc create_root_design { parentCell } {
   set axis_interconnect_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_interconnect:2.1 axis_interconnect_1 ]
   set_property -dict [ list \
    CONFIG.NUM_MI {1} \
+   CONFIG.S00_FIFO_DEPTH {64} \
    CONFIG.S00_HAS_REGSLICE {1} \
  ] $axis_interconnect_1
 
@@ -415,40 +419,29 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.CLKIN1_JITTER_PS {40.0} \
    CONFIG.CLKOUT1_DRIVES {BUFG} \
-   CONFIG.CLKOUT1_JITTER {117.522} \
+   CONFIG.CLKOUT1_JITTER {153.164} \
    CONFIG.CLKOUT1_MATCHED_ROUTING {true} \
-   CONFIG.CLKOUT1_PHASE_ERROR {79.008} \
+   CONFIG.CLKOUT1_PHASE_ERROR {154.678} \
    CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {50.000} \
    CONFIG.CLKOUT2_DRIVES {BUFG} \
-   CONFIG.CLKOUT2_JITTER {85.736} \
+   CONFIG.CLKOUT2_JITTER {119.392} \
    CONFIG.CLKOUT2_MATCHED_ROUTING {true} \
-   CONFIG.CLKOUT2_PHASE_ERROR {79.008} \
-   CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {250.000} \
+   CONFIG.CLKOUT2_PHASE_ERROR {154.678} \
+   CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {200.000} \
    CONFIG.CLKOUT2_USED {true} \
    CONFIG.FEEDBACK_SOURCE {FDBK_AUTO} \
-   CONFIG.MMCM_CLKFBOUT_MULT_F {5.000} \
+   CONFIG.MMCM_CLKFBOUT_MULT_F {24.000} \
    CONFIG.MMCM_CLKIN1_PERIOD {4.000} \
    CONFIG.MMCM_CLKIN2_PERIOD {10.0} \
-   CONFIG.MMCM_CLKOUT0_DIVIDE_F {25.000} \
-   CONFIG.MMCM_CLKOUT1_DIVIDE {5} \
-   CONFIG.MMCM_DIVCLK_DIVIDE {1} \
+   CONFIG.MMCM_CLKOUT0_DIVIDE_F {24.000} \
+   CONFIG.MMCM_CLKOUT1_DIVIDE {6} \
+   CONFIG.MMCM_DIVCLK_DIVIDE {5} \
    CONFIG.NUM_OUT_CLKS {2} \
    CONFIG.RESET_BOARD_INTERFACE {Custom} \
    CONFIG.RESET_PORT {resetn} \
    CONFIG.RESET_TYPE {ACTIVE_LOW} \
  ] $clk_wiz_0
 
-  # Create instance: data_pack_0, and set properties
-  set block_name data_pack
-  set block_cell_name data_pack_0
-  if { [catch {set data_pack_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2095 -severity "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   } elseif { $data_pack_0 eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2096 -severity "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
-     return 1
-   }
-  
   # Create instance: ddr4_0, and set properties
   set ddr4_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:ddr4:2.2 ddr4_0 ]
   set_property -dict [ list \
@@ -629,28 +622,24 @@ connect_bd_intf_net -intf_net [get_bd_intf_nets S00_AXI_1] [get_bd_intf_pins sys
 connect_bd_intf_net -intf_net [get_bd_intf_nets xdma_0_M_AXI_BYPASS] [get_bd_intf_pins system_ila_0/SLOT_0_AXI] [get_bd_intf_pins xdma_0/M_AXI_BYPASS]
 
   # Create port connections
-  connect_bd_net -net AXI_Write_0_break [get_bd_pins data_pack_0/Hbreak] [get_bd_pins interrupt_gen_0/full_break] [get_bd_pins system_ila_1/probe5]
-  connect_bd_net -net AXI_Write_0_data_next [get_bd_pins AXI_Write_0/data_next] [get_bd_pins data_pack_0/data_next] [get_bd_pins system_ila_1/probe4]
+  connect_bd_net -net AXI_Write_0_data_next [get_bd_pins AXI_Write_0/data_next] [get_bd_pins interrupt_gen_0/data_next]
   connect_bd_net -net AXI_Write_0_sstate [get_bd_pins AXI_Write_0/sstate] [get_bd_pins system_ila_1/probe3]
-  connect_bd_net -net axi_gpio_1_gpio_io_o [get_bd_ports reset_en] [get_bd_pins AXI_Write_0/en] [get_bd_pins data_pack_0/en] [get_bd_pins interrupt_gen_0/en] [get_bd_pins system_ila_1/probe2]
+  connect_bd_net -net axi_gpio_1_gpio_io_o [get_bd_ports reset_en] [get_bd_pins AXI_Write_0/en] [get_bd_pins interrupt_gen_0/en] [get_bd_pins system_ila_1/probe2]
   connect_bd_net -net axi_uartlite_0_tx [get_bd_pins axi_uartlite_0/tx] [get_bd_pins axi_uartlite_1/rx]
   connect_bd_net -net axi_uartlite_1_tx [get_bd_pins axi_uartlite_0/rx] [get_bd_pins axi_uartlite_1/tx]
-  connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_ports ila_clk] [get_bd_pins AXI_Write_0/core_clk] [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins data_pack_0/m_axis_c2h_aclk] [get_bd_pins interrupt_gen_0/sys_clk] [get_bd_pins proc_sys_reset_1/slowest_sync_clk] [get_bd_pins system_ila_1/clk]
+  connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_ports ila_clk] [get_bd_pins AXI_Write_0/core_clk] [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins interrupt_gen_0/sys_clk] [get_bd_pins proc_sys_reset_1/slowest_sync_clk] [get_bd_pins system_ila_1/clk]
   connect_bd_net -net clk_wiz_0_clk_out2 [get_bd_pins AXI_Write_0/m_axis_c2h_aclk] [get_bd_pins axis_interconnect_1/S00_AXIS_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
   connect_bd_net -net clk_wiz_0_locked [get_bd_pins clk_wiz_0/locked] [get_bd_pins proc_sys_reset_1/dcm_locked]
-  connect_bd_net -net data_pack_0_data [get_bd_pins AXI_Write_0/data] [get_bd_pins data_pack_0/data]
-  connect_bd_net -net data_pack_0_data_valid [get_bd_pins AXI_Write_0/data_valid] [get_bd_pins data_pack_0/data_valid] [get_bd_pins system_ila_1/probe0]
-  connect_bd_net -net data_pack_0_outdata2 [get_bd_pins data_pack_0/outdata2] [get_bd_pins system_ila_1/probe6]
   connect_bd_net -net ddr4_0_c0_ddr4_ui_clk [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins ddr4_0/c0_ddr4_ui_clk] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
   connect_bd_net -net ddr4_0_c0_init_calib_complete [get_bd_ports ddr4_mig_calib_done] [get_bd_pins ddr4_0/c0_init_calib_complete]
   connect_bd_net -net dfx_decoupler_0_rp_aresetn_RST [get_bd_pins clk_wiz_0/resetn] [get_bd_pins dfx_decoupler_0/rp_aresetn_RST] [get_bd_pins proc_sys_reset_1/ext_reset_in]
   connect_bd_net -net interrupt_gen_0_nutshell_clk [get_bd_ports encore_task_clk] [get_bd_pins interrupt_gen_0/nutshell_clk]
-  connect_bd_net -net out_enable_1 [get_bd_ports out_enable] [get_bd_pins data_pack_0/out_enable] [get_bd_pins system_ila_1/probe1]
-  connect_bd_net -net out_io_data_0_1 [get_bd_ports out_io_data] [get_bd_pins data_pack_0/out_io_data]
+  connect_bd_net -net out_enable_1 [get_bd_ports out_enable] [get_bd_pins AXI_Write_0/data_valid] [get_bd_pins system_ila_1/probe0] [get_bd_pins system_ila_1/probe1]
+  connect_bd_net -net out_io_data_1 [get_bd_ports out_io_data] [get_bd_pins AXI_Write_0/data]
   connect_bd_net -net pci_exp_rxn_1 [get_bd_ports pci_ep_rxn] [get_bd_pins xdma_0/pci_exp_rxn]
   connect_bd_net -net pci_exp_rxp_1 [get_bd_ports pci_ep_rxp] [get_bd_pins xdma_0/pci_exp_rxp]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins ddr4_0/c0_ddr4_aresetn] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
-  connect_bd_net -net proc_sys_reset_1_peripheral_aresetn [get_bd_ports encore_resetn] [get_bd_pins AXI_Write_0/m_axis_c2h_aresetn] [get_bd_pins axis_interconnect_1/S00_AXIS_ARESETN] [get_bd_pins data_pack_0/m_axis_c2h_aresetn] [get_bd_pins proc_sys_reset_1/peripheral_aresetn] [get_bd_pins system_ila_1/resetn]
+  connect_bd_net -net proc_sys_reset_1_peripheral_aresetn [get_bd_ports encore_resetn] [get_bd_pins AXI_Write_0/m_axis_c2h_aresetn] [get_bd_pins axis_interconnect_1/S00_AXIS_ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn] [get_bd_pins system_ila_1/resetn]
   connect_bd_net -net sys_rst_n_0_1 [get_bd_ports pcie_ep_perstn] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins util_vector_logic_0/Op1] [get_bd_pins xdma_0/sys_rst_n]
   connect_bd_net -net util_ds_buf_0_IBUF_DS_ODIV2 [get_bd_pins util_ds_buf_0/IBUF_DS_ODIV2] [get_bd_pins xdma_0/sys_clk]
   connect_bd_net -net util_ds_buf_0_IBUF_OUT [get_bd_pins util_ds_buf_0/IBUF_OUT] [get_bd_pins xdma_0/sys_clk_gt]

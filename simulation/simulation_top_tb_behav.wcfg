@@ -15,15 +15,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="234134fs"></ZoomStartTime>
-      <ZoomEndTime time="329335fs"></ZoomEndTime>
-      <Cursor1Time time="271834fs"></Cursor1Time>
+      <ZoomStartTime time="3015870fs"></ZoomStartTime>
+      <ZoomEndTime time="12355871fs"></ZoomEndTime>
+      <Cursor1Time time="342000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="276"></NameColumnWidth>
-      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+      <NameColumnWidth column_width="274"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="8" />
+   <WVObjectSize size="14" />
    <wvobject type="logic" fp_name="/simulation_top_tb/reset_en">
       <obj_property name="ElementShortName">reset_en</obj_property>
       <obj_property name="ObjectShortName">reset_en</obj_property>
@@ -102,25 +102,29 @@
       <obj_property name="label">data_packge</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/data_pack_0/inst/isnext">
-         <obj_property name="ElementShortName">isnext</obj_property>
-         <obj_property name="ObjectShortName">isnext</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/data_pack_0/inst/last_enable">
-         <obj_property name="ElementShortName">last_enable</obj_property>
-         <obj_property name="ObjectShortName">last_enable</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/data_pack_0/inst/reg_data_valid">
-         <obj_property name="ElementShortName">reg_data_valid</obj_property>
-         <obj_property name="ObjectShortName">reg_data_valid</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/data_pack_0/inst/Hbreak">
-         <obj_property name="ElementShortName">Hbreak</obj_property>
-         <obj_property name="ObjectShortName">Hbreak</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/data_pack_0/inst/data_next">
-         <obj_property name="ElementShortName">data_next</obj_property>
-         <obj_property name="ObjectShortName">data_next</obj_property>
-      </wvobject>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/M00_AXIS_tready">
+      <obj_property name="ElementShortName">M00_AXIS_tready</obj_property>
+      <obj_property name="ObjectShortName">M00_AXIS_tready</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/M00_AXIS_tvalid">
+      <obj_property name="ElementShortName">M00_AXIS_tvalid</obj_property>
+      <obj_property name="ObjectShortName">M00_AXIS_tvalid</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/S00_AXIS_tready">
+      <obj_property name="ElementShortName">S00_AXIS_tready</obj_property>
+      <obj_property name="ObjectShortName">S00_AXIS_tready</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/S00_AXIS_tvalid">
+      <obj_property name="ElementShortName">S00_AXIS_tvalid</obj_property>
+      <obj_property name="ObjectShortName">S00_AXIS_tvalid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/s00_couplers/s00_data_fifo/axis_wr_data_count">
+      <obj_property name="ElementShortName">axis_wr_data_count[31:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_wr_data_count[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/s00_couplers/s00_data_fifo/axis_rd_data_count">
+      <obj_property name="ElementShortName">axis_rd_data_count[31:0]</obj_property>
+      <obj_property name="ObjectShortName">axis_rd_data_count[31:0]</obj_property>
    </wvobject>
 </wave_config>
