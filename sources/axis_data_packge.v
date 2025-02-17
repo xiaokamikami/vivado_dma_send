@@ -1,31 +1,35 @@
 `timescale 1ns / 1ps
-
-module AXI_Write(
+`define ASYN_SEND_DATA
+module axis_data_packge #(
+    parameter DATA_WIDTH = 4064,
+    parameter AXIS_DATA_WIDTH = 512
+)(
   input        core_clk,
   input        m_axis_c2h_aclk,                        //axi
   input        m_axis_c2h_aresetn,                     //axi
   
-  input  en,
+  input  rst_en,
 
-  output  [511:0]         m_axis_c2h_tdata,
+  output  [AXIS_DATA_WIDTH-1:0]         m_axis_c2h_tdata,
   output  [63:0]              m_axis_c2h_tkeep,
   output                      m_axis_c2h_tlast,
   input                       m_axis_c2h_tready,
   output                      m_axis_c2h_tvalid,
 
-  input data_valid,
+  input  data_valid,
   output data_next,
   output [4:0]   sstate,
-  output [5:0] datalen_wire,
-  input  [4063:0] data
+  output [7:0] datalen_wire,
+  input  [DATA_WIDTH-1:0] data
 );
+    localparam AXIS_SEND_LEN = (DATA_WIDTH + AXIS_DATA_WIDTH - 8 - 1) / AXIS_DATA_WIDTH;
 
-    reg [4063:0] mix_data;
-    reg [5:0] datalen;
+    reg [DATA_WIDTH-1:0] mix_data;
+    reg [7:0] datalen;
     reg [7:0] data_num;
     reg [4:0] state;
     reg [511:0]  reg_m_axis_c2h_tdata;
- //   reg [63:0]    reg_m_axis_c2h_tkeep_0;
+
     reg                  reg_m_axis_c2h_tvalid;
     reg                  reg_m_axis_c2h_tlast;
     reg                  reg_data_next;
@@ -39,6 +43,8 @@ module AXI_Write(
     assign m_axis_c2h_tlast=reg_m_axis_c2h_tlast;
     assign datalen_wire= datalen;
 
+    // asynchronous clock fetches the signal
+`ifdef ASYN_SEND_DATA
     wire [3:0]core_50M_count = 'd3;
     wire [3:0]core_10M_count = 'd7;
     (* mark_debug = "true" *) reg [3:0]core_en_last_count;
@@ -50,9 +56,12 @@ module AXI_Write(
             core_en_last_count <= 'b0;
         end
     end
-    
-    always @(posedge m_axis_c2h_aclk or negedge m_axis_c2h_aresetn  ) begin
-        if(! m_axis_c2h_aresetn || en) begin
+`else
+    wire core_data_sampling_en = data_valid;
+`endif // ASYN_SEND_DATA
+
+    always @(posedge m_axis_c2h_aclk) begin
+        if(!m_axis_c2h_aresetn || !rst_en) begin
             mix_data<=0;
             state<=0;
             reg_m_axis_c2h_tvalid<=0;
@@ -78,10 +87,10 @@ module AXI_Write(
             if(m_axis_c2h_tready && reg_m_axis_c2h_tvalid) begin
                     reg_m_axis_c2h_tdata<=mix_data[511:0];
                     mix_data<=mix_data>>512;
-                    if( datalen=='b10010) begin
+                    if( datalen==(AXIS_SEND_LEN - 1)) begin
                         reg_m_axis_c2h_tlast<=1;
                         state<=1;
-                    end else if(datalen=='b10011) begin
+                    end else if(datalen==AXIS_SEND_LEN) begin
                         state<=2;
                         reg_m_axis_c2h_tlast<=0;
                         reg_data_next<=1;
