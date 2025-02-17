@@ -5,126 +5,76 @@
    <db_ref_list>
       <db_ref path="simulation_top_tb_behav.wdb" id="1">
          <top_modules>
-            <top_module name="axi_bram_ctrl_funcs" />
-            <top_module name="axi_dma_pkg" />
             <top_module name="glbl" />
-            <top_module name="lib_pkg" />
             <top_module name="simulation_top_tb" />
-            <top_module name="vcomponents" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="3015870fs"></ZoomStartTime>
-      <ZoomEndTime time="12355871fs"></ZoomEndTime>
-      <Cursor1Time time="342000fs"></Cursor1Time>
+      <ZoomStartTime time="125167fs"></ZoomStartTime>
+      <ZoomEndTime time="1030168fs"></ZoomEndTime>
+      <Cursor1Time time="270000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="274"></NameColumnWidth>
-      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="92"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="14" />
-   <wvobject type="logic" fp_name="/simulation_top_tb/reset_en">
-      <obj_property name="ElementShortName">reset_en</obj_property>
-      <obj_property name="ObjectShortName">reset_en</obj_property>
+   <WVObjectSize size="7" />
+   <wvobject type="logic" fp_name="/simulation_top_tb/rst_en">
+      <obj_property name="ElementShortName">rst_en</obj_property>
+      <obj_property name="ObjectShortName">rst_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/io_enable">
+      <obj_property name="ElementShortName">io_enable</obj_property>
+      <obj_property name="ObjectShortName">io_enable</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/m_axis_c2h_aclk">
+      <obj_property name="ElementShortName">m_axis_c2h_aclk</obj_property>
+      <obj_property name="ObjectShortName">m_axis_c2h_aclk</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/simulation_top_tb/core_clk">
       <obj_property name="ElementShortName">core_clk</obj_property>
       <obj_property name="ObjectShortName">core_clk</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/core_task_clk">
-      <obj_property name="ElementShortName">core_task_clk</obj_property>
-      <obj_property name="ObjectShortName">core_task_clk</obj_property>
+   <wvobject type="array" fp_name="/simulation_top_tb/test_piple">
+      <obj_property name="ElementShortName">test_piple[3:0]</obj_property>
+      <obj_property name="ObjectShortName">test_piple[3:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/m_axis_c2h_aresetn">
-      <obj_property name="ElementShortName">m_axis_c2h_aresetn</obj_property>
-      <obj_property name="ObjectShortName">m_axis_c2h_aresetn</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/en">
-      <obj_property name="ElementShortName">en</obj_property>
-      <obj_property name="ObjectShortName">en</obj_property>
-   </wvobject>
-   <wvobject type="group" fp_name="group385">
-      <obj_property name="label">sim_tb</obj_property>
+   <wvobject type="group" fp_name="group19">
+      <obj_property name="label">New Group</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/simulation_top_tb/clk">
-         <obj_property name="ElementShortName">clk</obj_property>
-         <obj_property name="ObjectShortName">clk</obj_property>
+      <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/core_clk">
+         <obj_property name="ElementShortName">core_clk</obj_property>
+         <obj_property name="ObjectShortName">core_clk</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/simulation_top_tb/test_count">
-         <obj_property name="ElementShortName">test_count[15:0]</obj_property>
-         <obj_property name="ObjectShortName">test_count[15:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/simulation_top_tb/test_piple">
-         <obj_property name="ElementShortName">test_piple[2:0]</obj_property>
-         <obj_property name="ObjectShortName">test_piple[2:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/io_enable">
-         <obj_property name="ElementShortName">io_enable</obj_property>
-         <obj_property name="ObjectShortName">io_enable</obj_property>
-      </wvobject>
-   </wvobject>
-   <wvobject type="group" fp_name="group384">
-      <obj_property name="label">AXI_write</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/m_axis_c2h_aclk">
-         <obj_property name="ElementShortName">m_axis_c2h_aclk</obj_property>
-         <obj_property name="ObjectShortName">m_axis_c2h_aclk</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/m_axis_c2h_tlast">
+      <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/m_axis_c2h_tlast">
          <obj_property name="ElementShortName">m_axis_c2h_tlast</obj_property>
          <obj_property name="ObjectShortName">m_axis_c2h_tlast</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/reg_m_axis_c2h_tvalid">
-         <obj_property name="ElementShortName">reg_m_axis_c2h_tvalid</obj_property>
-         <obj_property name="ObjectShortName">reg_m_axis_c2h_tvalid</obj_property>
+      <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/data_valid">
+         <obj_property name="ElementShortName">data_valid</obj_property>
+         <obj_property name="ObjectShortName">data_valid</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/m_axis_c2h_tready">
-         <obj_property name="ElementShortName">m_axis_c2h_tready</obj_property>
-         <obj_property name="ObjectShortName">m_axis_c2h_tready</obj_property>
+      <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/datalen_wire">
+         <obj_property name="ElementShortName">datalen_wire[7:0]</obj_property>
+         <obj_property name="ObjectShortName">datalen_wire[7:0]</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/sstate">
+      <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/data_next">
+         <obj_property name="ElementShortName">data_next</obj_property>
+         <obj_property name="ObjectShortName">data_next</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/sstate">
          <obj_property name="ElementShortName">sstate[4:0]</obj_property>
          <obj_property name="ObjectShortName">sstate[4:0]</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/core_data_sampling_en">
+      <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/core_data_sampling_en">
          <obj_property name="ElementShortName">core_data_sampling_en</obj_property>
          <obj_property name="ObjectShortName">core_data_sampling_en</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/AXI_Write_0/inst/core_en_last_count">
-         <obj_property name="ElementShortName">core_en_last_count[3:0]</obj_property>
-         <obj_property name="ObjectShortName">core_en_last_count[3:0]</obj_property>
-      </wvobject>
-   </wvobject>
-   <wvobject type="group" fp_name="group389">
-      <obj_property name="label">data_packge</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/M00_AXIS_tready">
-      <obj_property name="ElementShortName">M00_AXIS_tready</obj_property>
-      <obj_property name="ObjectShortName">M00_AXIS_tready</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/M00_AXIS_tvalid">
-      <obj_property name="ElementShortName">M00_AXIS_tvalid</obj_property>
-      <obj_property name="ObjectShortName">M00_AXIS_tvalid</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/S00_AXIS_tready">
-      <obj_property name="ElementShortName">S00_AXIS_tready</obj_property>
-      <obj_property name="ObjectShortName">S00_AXIS_tready</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/S00_AXIS_tvalid">
-      <obj_property name="ElementShortName">S00_AXIS_tvalid</obj_property>
-      <obj_property name="ObjectShortName">S00_AXIS_tvalid</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/s00_couplers/s00_data_fifo/axis_wr_data_count">
-      <obj_property name="ElementShortName">axis_wr_data_count[31:0]</obj_property>
-      <obj_property name="ObjectShortName">axis_wr_data_count[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/simulation_top_tb/pcie4_send/axis_interconnect_0/s00_couplers/s00_data_fifo/axis_rd_data_count">
-      <obj_property name="ElementShortName">axis_rd_data_count[31:0]</obj_property>
-      <obj_property name="ObjectShortName">axis_rd_data_count[31:0]</obj_property>
    </wvobject>
 </wave_config>

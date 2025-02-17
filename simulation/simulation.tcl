@@ -26,7 +26,7 @@ if { $list_projs eq "" } {
    create_project project_1 project -part xcvu19p-fsva3824-2-e
 }
 
-add_files ../sources/AXI_Write.v
+add_files ../sources/axis_data_packge.v
 add_files ../sources/data_pack.v
 add_files ../sources/interrupt_gen.v
 add_files ./simulation_top_tb.v

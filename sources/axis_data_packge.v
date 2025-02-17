@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`define ASYN_SEND_DATA
+//`define ASYN_SEND_DATA
 module axis_data_packge #(
     parameter DATA_WIDTH = 4064,
     parameter AXIS_DATA_WIDTH = 512

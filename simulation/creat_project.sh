@@ -1,4 +1,4 @@
 vivado -mode batch -source simulation.tcl
-vivado -mode batch -source ../pcie4_send.tcl
+vivado -mode batch -source simulation_top.tcl
 rm ./*.jou
 rm ./*.log

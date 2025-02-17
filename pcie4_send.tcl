@@ -438,7 +438,7 @@ proc create_root_design { parentCell } {
   
   set_property -dict [ list \
    CONFIG.FREQ_HZ {50000000} \
- ] [get_bd_pins /interrupt_gen_0/nutshell_clk]
+ ] [get_bd_pins /interrupt_gen_0/cpu_clk]
 
   # Create instance: proc_sys_reset_0, and set properties
   set proc_sys_reset_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0 ]
@@ -548,7 +548,7 @@ connect_bd_intf_net -intf_net [get_bd_intf_nets xdma_0_M_AXI_BYPASS] [get_bd_int
   connect_bd_net -net ddr4_0_c0_ddr4_ui_clk [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins ddr4_0/c0_ddr4_ui_clk] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
   connect_bd_net -net ddr4_0_c0_init_calib_complete [get_bd_ports ddr4_mig_calib_done] [get_bd_pins ddr4_0/c0_init_calib_complete]
   connect_bd_net -net dfx_decoupler_0_rp_aresetn_RST [get_bd_pins clk_wiz_0/resetn] [get_bd_pins dfx_decoupler_0/rp_aresetn_RST] [get_bd_pins proc_sys_reset_1/ext_reset_in]
-  connect_bd_net -net interrupt_gen_0_nutshell_clk [get_bd_ports encore_task_clk] [get_bd_pins interrupt_gen_0/nutshell_clk]
+  connect_bd_net -net interrupt_gen_0_cpu_clk [get_bd_ports encore_task_clk] [get_bd_pins interrupt_gen_0/cpu_clk]
   connect_bd_net -net out_enable_1 [get_bd_ports out_enable] [get_bd_pins axis_data_packge_0/data_valid] [get_bd_pins system_ila_1/probe0] [get_bd_pins system_ila_1/probe1]
   connect_bd_net -net out_io_data_1 [get_bd_ports out_io_data] [get_bd_pins axis_data_packge_0/data]
   connect_bd_net -net pci_exp_rxn_1 [get_bd_ports pci_ep_rxn] [get_bd_pins xdma_0/pci_exp_rxn]
