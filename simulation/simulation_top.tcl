@@ -183,10 +183,6 @@ proc create_root_design { parentCell } {
      return 1
    }
   
-  set_property -dict [ list \
-   CONFIG.FREQ_HZ {50000000} \
- ] [get_bd_pins /interrupt_gen_0/sys_clk]
-
   # Create interface connections
   connect_bd_intf_net -intf_net S00_AXIS_1 [get_bd_intf_pins axis_data_packge_0/m_axis_c2h] [get_bd_intf_pins axis_interconnect_0/S00_AXIS]
   connect_bd_intf_net -intf_net axis_interconnect_0_M00_AXIS [get_bd_intf_pins axis_data_fifo_0/S_AXIS] [get_bd_intf_pins axis_interconnect_0/M00_AXIS]
@@ -195,9 +191,9 @@ proc create_root_design { parentCell } {
   connect_bd_net -net axis_data_packge_0_data_next [get_bd_pins axis_data_packge_0/data_next] [get_bd_pins interrupt_gen_0/data_next]
   connect_bd_net -net core_clk_0_1 [get_bd_ports clk] [get_bd_pins axis_data_packge_0/core_clk] [get_bd_pins interrupt_gen_0/sys_clk]
   connect_bd_net -net data_valid_0_1 [get_bd_ports io_enable] [get_bd_pins axis_data_packge_0/data_valid]
-  connect_bd_net -net interrupt_gen_0_cpu_clk [get_bd_ports core_clk] [get_bd_pins interrupt_gen_0/cpu_clk]
+  connect_bd_net -net interrupt_gen_0_cpu_clk [get_bd_ports core_clk] [get_bd_pins interrupt_gen_0/core_clk]
   connect_bd_net -net m_axis_c2h_aclk_0_1 [get_bd_ports m_axis_c2h_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins axis_data_packge_0/m_axis_c2h_aclk] [get_bd_pins axis_interconnect_0/ACLK] [get_bd_pins axis_interconnect_0/M00_AXIS_ACLK] [get_bd_pins axis_interconnect_0/S00_AXIS_ACLK]
-  connect_bd_net -net rst_en_0_1 [get_bd_ports rstn_en] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins axis_data_packge_0/m_axis_c2h_aresetn] [get_bd_pins axis_data_packge_0/rst_en] [get_bd_pins axis_interconnect_0/ARESETN] [get_bd_pins axis_interconnect_0/M00_AXIS_ARESETN] [get_bd_pins axis_interconnect_0/S00_AXIS_ARESETN] [get_bd_pins interrupt_gen_0/en]
+  connect_bd_net -net rst_en_0_1 [get_bd_ports rstn_en] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins axis_data_packge_0/m_axis_c2h_aresetn] [get_bd_pins axis_data_packge_0/rstn] [get_bd_pins axis_interconnect_0/ARESETN] [get_bd_pins axis_interconnect_0/M00_AXIS_ARESETN] [get_bd_pins axis_interconnect_0/S00_AXIS_ARESETN] [get_bd_pins interrupt_gen_0/rstn]
 
   # Create address segments
 

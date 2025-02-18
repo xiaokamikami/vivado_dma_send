@@ -8,7 +8,7 @@ module axis_data_packge #(
   input        m_axis_c2h_aclk,                        //axi
   input        m_axis_c2h_aresetn,                     //axi
   
-  input  rst_en,
+  input  rstn,
 
   output  [AXIS_DATA_WIDTH-1:0]         m_axis_c2h_tdata,
   output  [63:0]              m_axis_c2h_tkeep,
@@ -18,30 +18,28 @@ module axis_data_packge #(
 
   input  data_valid,
   output data_next,
-  output [4:0]   sstate,
-  output [7:0] datalen_wire,
+  output [4:0] sstate,
   input  [DATA_WIDTH-1:0] data
 );
     localparam AXIS_SEND_LEN = (DATA_WIDTH + AXIS_DATA_WIDTH - 8 - 1) / AXIS_DATA_WIDTH;
 
     reg [DATA_WIDTH-1:0] mix_data;
+    reg [AXIS_DATA_WIDTH - 1:0]  reg_m_axis_c2h_tdata;
     reg [7:0] datalen;
     reg [7:0] data_num;
     reg [4:0] state;
-    reg [511:0]  reg_m_axis_c2h_tdata;
 
     reg                  reg_m_axis_c2h_tvalid;
     reg                  reg_m_axis_c2h_tlast;
     reg                  reg_data_next;
 
-    wire [511:0]first_data = {data[503:0], data_num};
+    wire [AXIS_DATA_WIDTH - 1:0]first_data = {data[AXIS_DATA_WIDTH - 8 - 1:0], data_num};
     assign data_next=reg_data_next;
     assign sstate =state;
     assign m_axis_c2h_tdata=reg_m_axis_c2h_tdata;
     assign m_axis_c2h_tvalid=reg_m_axis_c2h_tvalid;
     assign m_axis_c2h_tkeep=64'hffffffff_ffffffff;
     assign m_axis_c2h_tlast=reg_m_axis_c2h_tlast;
-    assign datalen_wire= datalen;
 
     // asynchronous clock fetches the signal
 `ifdef ASYN_SEND_DATA
@@ -61,7 +59,7 @@ module axis_data_packge #(
 `endif // ASYN_SEND_DATA
 
     always @(posedge m_axis_c2h_aclk) begin
-        if(!m_axis_c2h_aresetn || !rst_en) begin
+        if(!m_axis_c2h_aresetn || !rstn) begin
             mix_data<=0;
             state<=0;
             reg_m_axis_c2h_tvalid<=0;
@@ -74,7 +72,7 @@ module axis_data_packge #(
                 if(core_data_sampling_en) begin
                     reg_m_axis_c2h_tdata <= first_data;
                     reg_m_axis_c2h_tvalid<=1;
-                    mix_data <= data>> 503;
+                    mix_data <= data >> (AXIS_DATA_WIDTH - 8);
                     state<=1;
                     datalen <= 0;
                     reg_data_next <= 0;
@@ -85,8 +83,8 @@ module axis_data_packge #(
             end 
            1:begin
             if(m_axis_c2h_tready && reg_m_axis_c2h_tvalid) begin
-                    reg_m_axis_c2h_tdata<=mix_data[511:0];
-                    mix_data<=mix_data>>512;
+                    reg_m_axis_c2h_tdata <= mix_data[AXIS_DATA_WIDTH - 1:0];
+                    mix_data <= mix_data >> AXIS_DATA_WIDTH;
                     if( datalen==(AXIS_SEND_LEN - 1)) begin
                         reg_m_axis_c2h_tlast<=1;
                         state<=1;
