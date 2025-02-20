@@ -31,7 +31,6 @@ add_files sources/Nutshell_fpga.v
 add_files sources/axi.vh
 add_files sources/dut_wrapper.v
 add_files sources/axis_data_packge.v
-add_files sources/data_pack.v
 add_files sources/interrupt_gen.v
 add_files sources/system_top.v
 add_files sources/ClockGate.v
