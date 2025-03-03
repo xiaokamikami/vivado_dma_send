@@ -21,7 +21,7 @@ module axis_data_packge #(
   output [4:0] sstate,
   input  [DATA_WIDTH-1:0] data
 );
-    localparam AXIS_SEND_LEN = (DATA_WIDTH + AXIS_DATA_WIDTH - 8 - 1) / AXIS_DATA_WIDTH;
+    localparam AXIS_SEND_LEN = (DATA_WIDTH + AXIS_DATA_WIDTH + 8 - 1) / AXIS_DATA_WIDTH;
 
     reg [DATA_WIDTH-1:0] mix_data;
     reg [AXIS_DATA_WIDTH - 1:0]  reg_m_axis_c2h_tdata;
@@ -60,12 +60,12 @@ module axis_data_packge #(
 
     always @(posedge m_axis_c2h_aclk) begin
         if(!m_axis_c2h_aresetn || !rstn) begin
-            mix_data<=0;
             state<=0;
             reg_m_axis_c2h_tvalid<=0;
             reg_m_axis_c2h_tlast<=0;
             datalen<=0;
             reg_data_next<=1;
+            data_num <= 0;
         end else  begin
             case(state) 
             0 : begin
