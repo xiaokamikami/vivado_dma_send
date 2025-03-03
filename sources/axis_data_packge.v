@@ -21,7 +21,7 @@ module axis_data_packge #(
   output [4:0] sstate,
   input  [DATA_WIDTH-1:0] data
 );
-    localparam AXIS_SEND_LEN = (DATA_WIDTH + AXIS_DATA_WIDTH + 8 - 1) / AXIS_DATA_WIDTH;
+    localparam AXIS_SEND_LEN = ((DATA_WIDTH + AXIS_DATA_WIDTH + 8 - 1) / AXIS_DATA_WIDTH) - 1;
 
     reg [DATA_WIDTH-1:0] mix_data;
     reg [AXIS_DATA_WIDTH - 1:0]  reg_m_axis_c2h_tdata;
