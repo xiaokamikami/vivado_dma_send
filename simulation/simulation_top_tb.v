@@ -6,13 +6,14 @@ module simulation_top_tb;
     reg io_enable = 0;
     reg m_axis_c2h_aclk;
     // Reset generation
-    reg [3:0]test_piple = 0;
+    reg [4:0]test_piple = 0;
+    reg [4:0]test_need_count = 0;
     wire core_clk;
     // Instantiate the Unit Under Test (UUT)
     simulation_top uut (
         .rstn_en(!rst_en),
         .m_axis_c2h_aclk(m_axis_c2h_aclk),
-        .clk(clk),
+        .clk(m_axis_c2h_aclk),
         .io_enable(io_enable),
         .core_clk(core_clk)
     );
@@ -34,18 +35,19 @@ module simulation_top_tb;
 
 
     // Test stimulus
-    always @(posedge core_clk) begin
+    always @(posedge m_axis_c2h_aclk) begin
         if (rst_en) begin
             io_enable <= 1'b0;
-            test_piple <= 4'd0;
+            test_piple <= 5'd0;
         end else begin
-            if (test_piple == 4'd1111) begin
+            if (test_piple == test_need_count) begin
                 io_enable <= 1'b1;
-                test_piple <= 4'b0;
+                test_piple <= 5'd0000;
+                test_need_count <= test_need_count + 1'b1;
             end else begin
                 io_enable <= 1'b0;
+                test_piple = test_piple + 1'b1;
             end
-            test_piple = test_piple + 1'b1;
         end
     end
     
