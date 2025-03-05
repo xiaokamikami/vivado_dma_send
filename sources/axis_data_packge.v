@@ -23,7 +23,7 @@ module axis_data_packge #(
 );
     localparam AXIS_SEND_LEN = ((DATA_WIDTH + AXIS_DATA_WIDTH + 8 - 1) / AXIS_DATA_WIDTH) - 1;
 
-    reg [DATA_WIDTH-1:0] mix_data;
+    reg [DATA_WIDTH - AXIS_DATA_WIDTH + 8 - 1:0] mix_data;
     reg [AXIS_DATA_WIDTH - 1:0]  reg_m_axis_c2h_tdata;
     reg [7:0] datalen;
     reg [7:0] data_num;
@@ -72,7 +72,7 @@ module axis_data_packge #(
                 if(core_data_sampling_en) begin
                     reg_m_axis_c2h_tdata <= first_data;
                     reg_m_axis_c2h_tvalid<=1;
-                    mix_data <= data >> (AXIS_DATA_WIDTH - 8);
+                    mix_data <= data[DATA_WIDTH - 1:AXIS_DATA_WIDTH - 8];// >> (AXIS_DATA_WIDTH - 8);
                     state<=1;
                     datalen <= 0;
                     reg_data_next <= 0;
@@ -82,7 +82,7 @@ module axis_data_packge #(
                 end
             end 
            1:begin
-            if(m_axis_c2h_tready && reg_m_axis_c2h_tvalid) begin
+                if(m_axis_c2h_tready && reg_m_axis_c2h_tvalid) begin
                     reg_m_axis_c2h_tdata <= mix_data[AXIS_DATA_WIDTH - 1:0];
                     mix_data <= mix_data >> AXIS_DATA_WIDTH;
                     if( datalen==(AXIS_SEND_LEN - 1)) begin
@@ -99,7 +99,7 @@ module axis_data_packge #(
                     datalen<=datalen+1'b1;
                 end
                 else begin
-                state<=1;
+                    state<=1;
                 end   
            end
            2: begin
