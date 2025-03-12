@@ -107,6 +107,7 @@ proc write_to_ddr {fn} {
     flush stdout
   }
   close $fdata
+  exit
 }
 
 if {[catch {[write_to_ddr $file_name]} errmsg]} {
