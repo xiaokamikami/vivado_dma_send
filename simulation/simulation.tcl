@@ -27,7 +27,6 @@ if { $list_projs eq "" } {
 }
 
 add_files ../sources/axis_data_packge.v
-add_files ../sources/data_pack.v
 add_files ../sources/interrupt_gen.v
 add_files ./simulation_top_tb.v
 add_files ./simulation_top_tb_behav.wcfg

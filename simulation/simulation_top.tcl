@@ -45,6 +45,75 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 # Please add the sources of those modules before sourcing this Tcl script.
 open_project ./project/project_1.xpr
 
+# CHANGE DESIGN NAME HERE
+variable design_name
+set design_name simulation_top
+
+# If you do not already have an existing IP Integrator design open,
+# you can create a design using the following command:
+#    create_bd_design $design_name
+
+# Creating design if needed
+set errMsg ""
+set nRet 0
+
+set cur_design [current_bd_design -quiet]
+set list_cells [get_bd_cells -quiet]
+
+if { ${design_name} eq "" } {
+   # USE CASES:
+   #    1) Design_name not set
+
+   set errMsg "Please set the variable <design_name> to a non-empty value."
+   set nRet 1
+
+} elseif { ${cur_design} ne "" && ${list_cells} eq "" } {
+   # USE CASES:
+   #    2): Current design opened AND is empty AND names same.
+   #    3): Current design opened AND is empty AND names diff; design_name NOT in project.
+   #    4): Current design opened AND is empty AND names diff; design_name exists in project.
+
+   if { $cur_design ne $design_name } {
+      common::send_gid_msg -ssname BD::TCL -id 2001 -severity "INFO" "Changing value of <design_name> from <$design_name> to <$cur_design> since current design is empty."
+      set design_name [get_property NAME $cur_design]
+   }
+   common::send_gid_msg -ssname BD::TCL -id 2002 -severity "INFO" "Constructing design in IPI design <$cur_design>..."
+
+} elseif { ${cur_design} ne "" && $list_cells ne "" && $cur_design eq $design_name } {
+   # USE CASES:
+   #    5) Current design opened AND has components AND same names.
+
+   set errMsg "Design <$design_name> already exists in your project, please set the variable <design_name> to another value."
+   set nRet 1
+} elseif { [get_files -quiet ${design_name}.bd] ne "" } {
+   # USE CASES: 
+   #    6) Current opened design, has components, but diff names, design_name exists in project.
+   #    7) No opened design, design_name exists in project.
+
+   set errMsg "Design <$design_name> already exists in your project, please set the variable <design_name> to another value."
+   set nRet 2
+
+} else {
+   # USE CASES:
+   #    8) No opened design, design_name not in project.
+   #    9) Current opened design, has components, but diff names, design_name not in project.
+
+   common::send_gid_msg -ssname BD::TCL -id 2003 -severity "INFO" "Currently there is no design <$design_name> in project, so creating one..."
+
+   create_bd_design $design_name
+
+   common::send_gid_msg -ssname BD::TCL -id 2004 -severity "INFO" "Making design <$design_name> as current_bd_design."
+   current_bd_design $design_name
+
+}
+
+common::send_gid_msg -ssname BD::TCL -id 2005 -severity "INFO" "Currently the variable <design_name> is equal to \"$design_name\"."
+
+if { $nRet != 0 } {
+   catch {common::send_gid_msg -ssname BD::TCL -id 2006 -severity "ERROR" $errMsg}
+   return $nRet
+}
+
 set bCheckIPsPassed 1
 ##################################################################
 # CHECK IPs
@@ -191,7 +260,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net axis_data_packge_0_data_next [get_bd_pins axis_data_packge_0/data_next] [get_bd_pins interrupt_gen_0/data_next]
   connect_bd_net -net core_clk_0_1 [get_bd_ports clk] [get_bd_pins axis_data_packge_0/core_clk] [get_bd_pins interrupt_gen_0/sys_clk]
   connect_bd_net -net data_valid_0_1 [get_bd_ports io_enable] [get_bd_pins axis_data_packge_0/data_valid]
-  connect_bd_net -net interrupt_gen_0_cpu_clk [get_bd_ports core_clk] [get_bd_pins interrupt_gen_0/core_clk]
+  connect_bd_net -net interrupt_gen_0_cpu_clk [get_bd_ports core_clk] [get_bd_pins interrupt_gen_0/cpu_clk]
   connect_bd_net -net m_axis_c2h_aclk_0_1 [get_bd_ports m_axis_c2h_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins axis_data_packge_0/m_axis_c2h_aclk] [get_bd_pins axis_interconnect_0/ACLK] [get_bd_pins axis_interconnect_0/M00_AXIS_ACLK] [get_bd_pins axis_interconnect_0/S00_AXIS_ACLK]
   connect_bd_net -net rst_en_0_1 [get_bd_ports rstn_en] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins axis_data_packge_0/m_axis_c2h_aresetn] [get_bd_pins axis_data_packge_0/rstn] [get_bd_pins axis_interconnect_0/ARESETN] [get_bd_pins axis_interconnect_0/M00_AXIS_ARESETN] [get_bd_pins axis_interconnect_0/S00_AXIS_ARESETN] [get_bd_pins interrupt_gen_0/rstn]
 
@@ -201,26 +270,13 @@ proc create_root_design { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
+  validate_bd_design
+  save_bd_design
 }
 # End of create_root_design()
 
+##################################################################
+# MAIN FLOW
+##################################################################
 
-
-
-proc available_tcl_procs { } {
-   puts "##################################################################"
-   puts "# Available Tcl procedures to recreate hierarchical blocks:"
-   puts "#"
-   puts "#    create_root_design"
-   puts "#"
-   puts "#"
-   puts "# The following procedures will create hiearchical blocks with addressing "
-   puts "# for IPs within those blocks and their sub-hierarchical blocks. Addressing "
-   puts "# will not be handled outside those blocks:"
-   puts "#"
-   puts "#    create_root_design"
-   puts "#"
-   puts "##################################################################"
-}
-
-available_tcl_procs
+create_root_design ""
