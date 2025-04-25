@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //`define ASYN_SEND_DATA
 module axis_data_packge #(
-    parameter DATA_WIDTH = 4064,
+    parameter DATA_WIDTH = 16000,
     parameter AXIS_DATA_WIDTH = 512
 )(
   input        core_clk,
@@ -50,9 +50,9 @@ module axis_data_packge #(
 
     always @(*) begin
         if (!rstn) begin
-            reg_data_next <= 1;
+            reg_data_next = 1;
         end else begin
-            reg_data_next <= !(buffer_0_valid & buffer_1_valid);
+            reg_data_next = !(buffer_0_valid & buffer_1_valid);
         end
     end
 
@@ -74,7 +74,6 @@ module axis_data_packge #(
     wire core_data_sampling_en = data_valid;
 `endif // ASYN_SEND_DATA
 
-    reg first_start;
     always @(posedge m_axis_c2h_aclk) begin
         if(!m_axis_c2h_aresetn || !rstn) begin
             state <= 0;
@@ -131,7 +130,6 @@ module axis_data_packge #(
                     end else if(datalen == AXIS_SEND_LEN) begin
                         state <= 2;
                         reg_m_axis_c2h_tlast <= 0;
-                        reg_data_next <= 1;
                         reg_m_axis_c2h_tvalid <= 0;
                     end else begin
                         state <= 1;
