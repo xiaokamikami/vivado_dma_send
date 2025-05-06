@@ -214,6 +214,8 @@ proc create_root_design { parentCell } {
   # Create ports
   set clk [ create_bd_port -dir I -type clk -freq_hz 50000000 clk ]
   set core_clk [ create_bd_port -dir O -type clk core_clk ]
+  set data_next [ create_bd_port -dir O data_next ]
+  set io_data [ create_bd_port -dir I -from 15999 -to 0 io_data ]
   set io_enable [ create_bd_port -dir I io_enable ]
   set m_axis_c2h_aclk [ create_bd_port -dir I -type clk m_axis_c2h_aclk ]
   set rstn_en [ create_bd_port -dir I rstn_en ]
@@ -257,8 +259,9 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net axis_interconnect_0_M00_AXIS [get_bd_intf_pins axis_data_fifo_0/S_AXIS] [get_bd_intf_pins axis_interconnect_0/M00_AXIS]
 
   # Create port connections
-  connect_bd_net -net axis_data_packge_0_data_next [get_bd_pins axis_data_packge_0/data_next] [get_bd_pins interrupt_gen_0/data_next]
+  connect_bd_net -net axis_data_packge_0_data_next [get_bd_ports data_next] [get_bd_pins axis_data_packge_0/data_next] [get_bd_pins interrupt_gen_0/data_next]
   connect_bd_net -net core_clk_0_1 [get_bd_ports clk] [get_bd_pins axis_data_packge_0/core_clk] [get_bd_pins interrupt_gen_0/sys_clk]
+  connect_bd_net -net data_0_1 [get_bd_ports io_data] [get_bd_pins axis_data_packge_0/data]
   connect_bd_net -net data_valid_0_1 [get_bd_ports io_enable] [get_bd_pins axis_data_packge_0/data_valid]
   connect_bd_net -net interrupt_gen_0_cpu_clk [get_bd_ports core_clk] [get_bd_pins interrupt_gen_0/cpu_clk]
   connect_bd_net -net m_axis_c2h_aclk_0_1 [get_bd_ports m_axis_c2h_aclk] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins axis_data_packge_0/m_axis_c2h_aclk] [get_bd_pins axis_interconnect_0/ACLK] [get_bd_pins axis_interconnect_0/M00_AXIS_ACLK] [get_bd_pins axis_interconnect_0/S00_AXIS_ACLK]
@@ -275,8 +278,11 @@ proc create_root_design { parentCell } {
 }
 # End of create_root_design()
 
+
 ##################################################################
 # MAIN FLOW
 ##################################################################
 
 create_root_design ""
+
+

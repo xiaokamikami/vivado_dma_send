@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="310797fs"></ZoomStartTime>
-      <ZoomEndTime time="4475798fs"></ZoomEndTime>
-      <Cursor1Time time="3650797fs"></Cursor1Time>
+      <ZoomStartTime time="374770fs"></ZoomStartTime>
+      <ZoomEndTime time="821271fs"></ZoomEndTime>
+      <Cursor1Time time="450270fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="287"></NameColumnWidth>
-      <ValueColumnWidth column_width="153"></ValueColumnWidth>
+      <NameColumnWidth column_width="239"></NameColumnWidth>
+      <ValueColumnWidth column_width="141"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="14" />
+   <WVObjectSize size="20" />
    <wvobject type="logic" fp_name="/simulation_top_tb/rst_en">
       <obj_property name="ElementShortName">rst_en</obj_property>
       <obj_property name="ObjectShortName">rst_en</obj_property>
@@ -48,17 +48,13 @@
       <obj_property name="ElementShortName">core_clk</obj_property>
       <obj_property name="ObjectShortName">core_clk</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/m_axis_c2h_tlast">
-      <obj_property name="ElementShortName">m_axis_c2h_tlast</obj_property>
-      <obj_property name="ObjectShortName">m_axis_c2h_tlast</obj_property>
+   <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/current_buffer">
+      <obj_property name="ElementShortName">current_buffer</obj_property>
+      <obj_property name="ObjectShortName">current_buffer</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/m_axis_c2h_tvalid">
-      <obj_property name="ElementShortName">m_axis_c2h_tvalid</obj_property>
-      <obj_property name="ObjectShortName">m_axis_c2h_tvalid</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/sstate">
-      <obj_property name="ElementShortName">sstate[4:0]</obj_property>
-      <obj_property name="ObjectShortName">sstate[4:0]</obj_property>
+   <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/data_valid">
+      <obj_property name="ElementShortName">data_valid</obj_property>
+      <obj_property name="ObjectShortName">data_valid</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/buffer_0_valid">
       <obj_property name="ElementShortName">buffer_0_valid</obj_property>
@@ -68,12 +64,44 @@
       <obj_property name="ElementShortName">buffer_1_valid</obj_property>
       <obj_property name="ObjectShortName">buffer_1_valid</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/current_buffer">
-      <obj_property name="ElementShortName">current_buffer</obj_property>
-      <obj_property name="ObjectShortName">current_buffer</obj_property>
+   <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/datalen">
+      <obj_property name="ElementShortName">datalen[7:0]</obj_property>
+      <obj_property name="ObjectShortName">datalen[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/data">
+      <obj_property name="ElementShortName">data[15999:0]</obj_property>
+      <obj_property name="ObjectShortName">data[15999:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/buffer_0">
+      <obj_property name="ElementShortName">buffer_0[15999:0]</obj_property>
+      <obj_property name="ObjectShortName">buffer_0[15999:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/buffer_1">
+      <obj_property name="ElementShortName">buffer_1[15999:0]</obj_property>
+      <obj_property name="ObjectShortName">buffer_1[15999:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/this_buffer">
       <obj_property name="ElementShortName">this_buffer</obj_property>
       <obj_property name="ObjectShortName">this_buffer</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/mix_data">
+      <obj_property name="ElementShortName">mix_data[15495:0]</obj_property>
+      <obj_property name="ObjectShortName">mix_data[15495:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/data_next">
+      <obj_property name="ElementShortName">data_next</obj_property>
+      <obj_property name="ObjectShortName">data_next</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/simulation_top_tb/uut/axis_data_packge_0/sstate">
+      <obj_property name="ElementShortName">sstate[4:0]</obj_property>
+      <obj_property name="ObjectShortName">sstate[4:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/simulation_top_tb/uut/axis_data_packge_0/inst/m_axis_c2h_aresetn">
+      <obj_property name="ElementShortName">m_axis_c2h_aresetn</obj_property>
+      <obj_property name="ObjectShortName">m_axis_c2h_aresetn</obj_property>
    </wvobject>
 </wave_config>

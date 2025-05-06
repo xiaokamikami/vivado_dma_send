@@ -48,11 +48,11 @@ module axis_data_packge #(
     assign m_axis_c2h_tkeep = 64'hffffffff_ffffffff;
     assign m_axis_c2h_tlast = reg_m_axis_c2h_tlast;
 
-    always @(*) begin
+    always @(posedge m_axis_c2h_aclk) begin
         if (!rstn) begin
-            reg_data_next = 1;
+            reg_data_next <= 1;
         end else begin
-            reg_data_next = !(buffer_0_valid & buffer_1_valid);
+            reg_data_next <= !(buffer_0_valid & buffer_1_valid) & !((buffer_0_valid || buffer_1_valid) & data_valid);
         end
     end
 
@@ -87,7 +87,7 @@ module axis_data_packge #(
             this_buffer <= 0;
         end else begin
             // Fill the buffer that is not currently being read
-            if (data_valid) begin
+            if (data_valid & reg_data_next) begin
                 if (current_buffer == 0) begin
                     buffer_1 <= data;
                     buffer_1_valid <= 1;
