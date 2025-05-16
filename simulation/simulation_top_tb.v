@@ -49,11 +49,14 @@ module simulation_top_tb;
                 io_enable <= 1'b1;
                 test_piple <= 5'd0000;
                 io_data <= io_data + 1;
-                //test_need_count <= test_need_count + 1'b1;
+                test_need_count <= test_need_count + 1'b1;
             end else begin
                 io_enable <= 1'b0;
                 test_piple = test_piple + 1'b1;
             end
+        end  else begin
+            io_enable <= io_enable;
+            test_piple <= test_piple;
         end
     end
     

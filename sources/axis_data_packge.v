@@ -23,6 +23,7 @@ module axis_data_packge #(
 );
     localparam NUM_PACKETS_PER_BUFFER = 8; // one send packet num
     localparam AXIS_SEND_LEN = ((DATA_WIDTH + AXIS_DATA_WIDTH + 8 - 1) / AXIS_DATA_WIDTH) - 1;
+
     localparam IDLE = 3'b001;
     localparam TRANSFER = 3'b010;
     localparam DONE = 3'b100;
@@ -58,15 +59,6 @@ module axis_data_packge #(
 
     wire both_full = buffer_0_valid & buffer_1_valid;
 
-    always @(posedge m_axis_c2h_aclk) begin // Back pressure control
-        if (!m_axis_c2h_aresetn || !rstn) begin
-            reg_data_next <= 1'b1;
-        end else begin
-            reg_data_next <= ~both_full & ~(wr_pkt_cnt == NUM_PACKETS_PER_BUFFER - 1);
-        end
-    end
-
-
     // asynchronous clock fetches the signal
 `ifdef ASYN_SEND_DATA
     wire [3:0]core_50M_count = 'd3;
@@ -86,7 +78,7 @@ module axis_data_packge #(
 
     wire can_send = this_buffer ? buffer_0_valid : buffer_1_valid;
     wire can_cont_send = rd_pkt_cnt < (NUM_PACKETS_PER_BUFFER - 1);
-    wire one_send_last = datalen == (AXIS_SEND_LEN - 1);
+    wire one_send_last = datalen == AXIS_SEND_LEN;
 
     always @(posedge m_axis_c2h_aclk) begin
         if (!m_axis_c2h_aresetn || !rstn)
@@ -139,6 +131,14 @@ module axis_data_packge #(
         end
     end
 
+    always @(posedge m_axis_c2h_aclk) begin // Back pressure control
+        if (!m_axis_c2h_aresetn || !rstn) begin
+            reg_data_next <= 1'b1;
+        end else begin
+            reg_data_next <= ~both_full & ~(wr_pkt_cnt == NUM_PACKETS_PER_BUFFER - 1 & data_valid);
+        end
+    end
+
     // data send to axis
     always @(posedge m_axis_c2h_aclk) begin
         if(!m_axis_c2h_aresetn || !rstn) begin
@@ -162,12 +162,12 @@ module axis_data_packge #(
                     reg_m_axis_c2h_tvalid <= 1;
                     data_num <= data_num + 1'b1;
                     rd_pkt_cnt <= 1;
+                    datalen <= 1;
                 end
             end 
             TRANSFER: begin
                 if(m_axis_c2h_tready && reg_m_axis_c2h_tvalid) begin
                     reg_m_axis_c2h_tdata <= mix_data[AXIS_DATA_WIDTH - 1:0];
-                    mix_data <= mix_data >> AXIS_DATA_WIDTH;
                     if(!can_cont_send & one_send_last) begin
                         reg_m_axis_c2h_tlast <= 1;
                         rd_pkt_cnt <= 0;
@@ -179,11 +179,9 @@ module axis_data_packge #(
                         end
                         rd_pkt_cnt <= rd_pkt_cnt + 1'b1;
                         datalen <= 0;
-                    end else if(datalen == AXIS_SEND_LEN) begin
-                        reg_m_axis_c2h_tlast <= 0;
-                        reg_m_axis_c2h_tvalid <= 0;
                     end else begin
                         datalen <= datalen + 1'b1;
+                        mix_data <= mix_data >> AXIS_DATA_WIDTH;
                     end
                 end
             end
