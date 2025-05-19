@@ -40,14 +40,12 @@ module axis_data_packge #(
     reg                  reg_m_axis_c2h_tlast;
     reg                  reg_data_next;
     // Ping-Pong Buffers
-    (* ram_style = "block" *) reg [DATA_WIDTH - 1:0] buffer_0 [0 : NUM_PACKETS_PER_BUFFER - 1];
-    (* ram_style = "block" *) reg [DATA_WIDTH - 1:0] buffer_1 [0 : NUM_PACKETS_PER_BUFFER - 1];
-    reg buffer_0_valid;
-    reg buffer_1_valid;
+    reg [DATA_WIDTH - 1:0] dual_buffer [1:0][0 : NUM_PACKETS_PER_BUFFER - 1];
     reg current_buffer; // 0 for buffer_0, 1 for buffer_1
     reg this_buffer; // need read buffer
-    reg [2:0] wr_pkt_cnt;   // (0~7)
-    reg [2:0] rd_pkt_cnt;   // (0~7)
+    reg [3:0] wr_pkt_cnt;   // (0~7)
+    reg [3:0] rd_pkt_cnt;   // (0~7)
+    reg [1:0] buffer_valid;
 
     wire [AXIS_DATA_WIDTH - 1:0]first_data = {data[AXIS_DATA_WIDTH - 8 - 1:0], data_num};
     assign data_next = reg_data_next;
@@ -57,7 +55,7 @@ module axis_data_packge #(
     assign m_axis_c2h_tkeep = 64'hffffffff_ffffffff;
     assign m_axis_c2h_tlast = reg_m_axis_c2h_tlast;
 
-    wire both_full = buffer_0_valid & buffer_1_valid;
+    wire both_full = buffer_valid[0] & buffer_valid[1];
 
     // asynchronous clock fetches the signal
 `ifdef ASYN_SEND_DATA
@@ -76,8 +74,8 @@ module axis_data_packge #(
     wire core_data_sampling_en = data_valid;
 `endif // ASYN_SEND_DATA
 
-    wire can_send = this_buffer ? buffer_0_valid : buffer_1_valid;
-    wire can_cont_send = rd_pkt_cnt < (NUM_PACKETS_PER_BUFFER - 1);
+    wire can_send = this_buffer ? buffer_valid[1] : buffer_valid[0];
+    wire can_cont_send = rd_pkt_cnt < NUM_PACKETS_PER_BUFFER;
     wire one_send_last = datalen == AXIS_SEND_LEN;
 
     always @(posedge m_axis_c2h_aclk) begin
@@ -100,33 +98,21 @@ module axis_data_packge #(
     // data buffer
     always @(posedge m_axis_c2h_aclk) begin
         if (!m_axis_c2h_aresetn || !rstn) begin
-            buffer_0_valid <= 0;
-            buffer_1_valid <= 0;
             current_buffer <= 0;
             wr_pkt_cnt <= 0;
+            buffer_valid <= 'b00;
         end else begin
             if (data_valid & reg_data_next) begin
-                if (current_buffer == 0) begin
-                    buffer_1[wr_pkt_cnt] <= data;
-                end else begin
-                    buffer_0[wr_pkt_cnt] <= data;
-                end
+                dual_buffer[!current_buffer][wr_pkt_cnt] <= data;
                 wr_pkt_cnt <= wr_pkt_cnt + 1'b1;
                 if (wr_pkt_cnt == NUM_PACKETS_PER_BUFFER - 1) begin
-                    if (current_buffer)
-                        buffer_0_valid <= 1;
-                    else 
-                        buffer_1_valid <= 1;
+                    buffer_valid[!current_buffer] <= 1;
                     wr_pkt_cnt <= 0;
                     current_buffer <= ~current_buffer; // Switch buffers
                 end
             end
-            if (next_state == DONE) begin
-                if (this_buffer == 1) begin // Releasing a buffer
-                    buffer_0_valid <= 0;
-                end else begin
-                    buffer_1_valid <= 0;
-                end
+            if (next_state == DONE) begin // Releasing a buffer
+                buffer_valid[this_buffer] <= 0;
             end
         end
     end
@@ -152,13 +138,8 @@ module axis_data_packge #(
             case(current_state)
             IDLE : begin
                 if (can_send) begin
-                    if (this_buffer == 1) begin
-                        reg_m_axis_c2h_tdata <= {buffer_0[0][AXIS_DATA_WIDTH - 8 - 1:0], data_num};
-                        mix_data <= buffer_0[0][DATA_WIDTH - 1:AXIS_DATA_WIDTH - 8];
-                    end else begin
-                        reg_m_axis_c2h_tdata <= {buffer_1[0][AXIS_DATA_WIDTH - 8 - 1:0], data_num};
-                        mix_data <= buffer_1[0][DATA_WIDTH - 1:AXIS_DATA_WIDTH - 8];
-                    end
+                    reg_m_axis_c2h_tdata <= {dual_buffer[this_buffer][0][AXIS_DATA_WIDTH - 8 - 1:0], data_num};
+                    mix_data <= dual_buffer[this_buffer][0][DATA_WIDTH - 1:AXIS_DATA_WIDTH - 8];
                     reg_m_axis_c2h_tvalid <= 1;
                     data_num <= data_num + 1'b1;
                     rd_pkt_cnt <= 1;
@@ -172,11 +153,8 @@ module axis_data_packge #(
                         reg_m_axis_c2h_tlast <= 1;
                         rd_pkt_cnt <= 0;
                     end else if (can_cont_send & one_send_last) begin
-                        if (this_buffer == 1) begin
-                            mix_data <= buffer_1[rd_pkt_cnt];
-                        end else begin
-                            mix_data <= buffer_0[rd_pkt_cnt];
-                        end
+                        mix_data <= {dual_buffer[this_buffer][rd_pkt_cnt], data_num};
+                        data_num <= data_num + 1'b1;
                         rd_pkt_cnt <= rd_pkt_cnt + 1'b1;
                         datalen <= 0;
                     end else begin
