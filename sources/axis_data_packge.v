@@ -168,6 +168,7 @@ module axis_data_packge #(
                 reg_m_axis_c2h_tlast <= 0;
                 datalen <= 0;
                 this_buffer <= ~this_buffer;
+                data_num <= 0;
             end
             endcase
         end
