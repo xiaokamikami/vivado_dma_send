@@ -153,8 +153,7 @@ module axis_data_packge #(
                         reg_m_axis_c2h_tlast <= 1;
                         rd_pkt_cnt <= 0;
                     end else if (can_cont_send & one_send_last) begin
-                        mix_data <= {dual_buffer[this_buffer][rd_pkt_cnt], data_num};
-                        data_num <= data_num + 1'b1;
+                        mix_data <= {dual_buffer[this_buffer][rd_pkt_cnt], 8'b0};
                         rd_pkt_cnt <= rd_pkt_cnt + 1'b1;
                         datalen <= 0;
                     end else begin
@@ -168,7 +167,6 @@ module axis_data_packge #(
                 reg_m_axis_c2h_tlast <= 0;
                 datalen <= 0;
                 this_buffer <= ~this_buffer;
-                data_num <= 0;
             end
             endcase
         end
