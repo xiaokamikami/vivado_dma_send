@@ -132,7 +132,7 @@ module axis_data_packge #(
             reg_m_axis_c2h_tlast <= 0;
             datalen <= 0;
             data_num <= 0;
-            this_buffer <= 0;
+            this_buffer <= 1;
             rd_pkt_cnt <= 0;
         end else begin
             case(current_state)
