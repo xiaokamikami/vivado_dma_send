@@ -102,7 +102,7 @@ module axis_data_packge #(
             wr_pkt_cnt <= 0;
             buffer_valid <= 'b00;
         end else begin
-            if (data_valid & reg_data_next) begin
+            if (core_data_sampling_en & reg_data_next) begin
                 dual_buffer[!current_buffer][wr_pkt_cnt] <= data;
                 wr_pkt_cnt <= wr_pkt_cnt + 1'b1;
                 if (wr_pkt_cnt == NUM_PACKETS_PER_BUFFER - 1) begin
@@ -121,7 +121,7 @@ module axis_data_packge #(
         if (!m_axis_c2h_aresetn || !rstn) begin
             reg_data_next <= 1'b1;
         end else begin
-            reg_data_next <= ~both_full & ~(wr_pkt_cnt == NUM_PACKETS_PER_BUFFER - 1 & data_valid);
+            reg_data_next <= ~both_full & ~(wr_pkt_cnt == NUM_PACKETS_PER_BUFFER - 1 & core_data_sampling_en);
         end
     end
 
